@@ -3541,8 +3541,9 @@ void InnerLoopVectorizer::fixVectorizedLoop(VPTransformState &State,
   // This is the second stage of vectorizing recurrences.
   fixCrossIterationPHIs(State);
 
-  // Forget the original basic block.
-  PSE.getSE()->forgetLoop(OrigLoop);
+  // Forget the original loop and any containing loops as their backedge-taken
+  // counts may have become invalid after vectorization.
+  PSE.getSE()->forgetTopmostLoop(OrigLoop);
   PSE.getSE()->forgetBlockAndLoopDispositions();
 
   // After vectorization, the exit blocks of the original loop will have
